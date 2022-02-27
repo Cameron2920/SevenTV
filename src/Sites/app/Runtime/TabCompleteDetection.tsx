@@ -69,6 +69,8 @@ export class TabCompleteDetection {
 		}
 
 		this.keyListener = (ev) => {
+			console.log('asdfasdf', ev, ev.key, ev.shiftKey);
+
 			if (ev.key === 'Tab') {
 				// Option is enabled?
 				if (!this.app.config.get('general.autocomplete')?.asBoolean()) {
@@ -138,6 +140,7 @@ export class TabCompleteDetection {
 	 * @param emotes an array of emote name strings
 	 */
 	private handleTabPress(ev: KeyboardEvent, emotes: string[]): void {
+		console.log('sdfasdf0');
 		const input = ev.target as HTMLInputElement;
 		// Twitch inserts a special character in front of emotes
 		const inputText = (input.value ?? input.textContent).replace(/﻿/g, '');
@@ -175,8 +178,23 @@ export class TabCompleteDetection {
 			this.tab.cursor = cursorValue;
 			this.tab.index = -1;
 		}
-		this.tab.index >= (entries.length - 1) ? this.tab.index = 0 : this.tab.index++;
 
+		if(ev.shiftKey){
+			if(this.tab.index <= 0){
+				this.tab.index = entries.length - 1;
+			}
+			else{
+				this.tab.index--;
+			}
+		}
+		else{
+			if(this.tab.index >= (entries.length - 1)){
+				this.tab.index = 0;
+			}
+			else{
+				this.tab.index++;
+			}
+		}
 		// Find the next emote
 		const next = entries[this.tab.index];
 		if (!next) return undefined;
